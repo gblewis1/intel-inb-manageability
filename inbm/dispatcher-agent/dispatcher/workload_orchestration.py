@@ -280,7 +280,7 @@ class WorkloadOrchestration:
                 # Release lock
                 latch.count_down()
 
-        cmd = ConfigCommand('get_element', child_tag)
+        cmd = ConfigCommand(command='get_element', path=child_tag, value=None, header_string=None, value_string=None)
         # Subscribe to response channel using the same request ID
         self._dispatcher_callbacks.broker_core.mqtt_subscribe(
             cmd.create_response_topic(), on_command)

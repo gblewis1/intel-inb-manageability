@@ -15,6 +15,7 @@ from .ixlink_wrapper import receive_file_progress
 from .ixlink_wrapper import PCIE, X_LINK_SUCCESS
 from inbm_vision_lib.constants import XLINK_SIMULATOR_PC_LIB_PATH, XLINK_SIMULATOR_ARM_LIB_PATH, VISION
 from inbm_vision_lib.utility import remove_file
+import abc
 
 from ctypes import *
 from time import sleep
@@ -135,6 +136,7 @@ class XlinkSimulatorWrapper(IXlinkWrapper):
         """Receive message"""
         pass
 
+    @abc.abstractmethod
     def get_xlink_device_status(self) -> int:
         """ Check the xlink device status.
 

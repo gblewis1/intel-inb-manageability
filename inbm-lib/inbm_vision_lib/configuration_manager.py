@@ -34,7 +34,7 @@ class ConfigurationManager:
     """Class for handling configuration."""
 
     def __init__(self, xml: Union[str, pathlib.Path], is_file: bool = True,
-                 schema_location: Union[str, pathlib.Path] = None) -> None:
+                 schema_location: Union[str, pathlib.Path, None] = None) -> None:
         """Init for ConfigurationManager.
 
         @param xml: XML to be parsed

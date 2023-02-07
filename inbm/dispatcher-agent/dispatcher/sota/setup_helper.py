@@ -11,6 +11,7 @@ import fileinput
 import logging
 import sys
 import os
+from abc import ABC, abstractmethod
 
 from .constants import GET_UBUNTU_PKG_REPO, APT_SOURCES_LIST_PATH, MENDER_FILE_PATH
 from ..common import dispatcher_state
@@ -19,7 +20,7 @@ from ..dispatcher_callbacks import DispatcherCallbacks
 logger = logging.getLogger(__name__)
 
 
-class SetupHelper:
+class SetupHelper(ABC):
     """Abstract class to perform OS-dependent tasks immediately before and after performing
     an OS upgrade
     """
@@ -32,12 +33,14 @@ class SetupHelper:
         self._dispatcher_callbacks = dispatcher_callbacks
         self.list_path = list_path
 
+    @abstractmethod
     def pre_processing(self):
         """Perform checks immediately before applying an OS update or upgrade.
         @return: True if OK to proceed; False otherwise
         """
         pass
 
+    @abstractmethod
     def get_snapper_snapshot_number(self) -> str:
         """
         @return: snapshot number from dispatcher state file (FIXME this is not OS generic)

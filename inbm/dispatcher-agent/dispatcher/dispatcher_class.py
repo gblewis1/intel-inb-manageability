@@ -252,7 +252,7 @@ class Dispatcher(WindowsService):
         self.invoke_workload_orchestration_check(True)
 
     def _do_config_install_load(self, parsed_head: XmlHandler, target_type: str,
-                                xml: str = None) -> Result:
+                                xml: Optional[str] = None) -> Result:
         """Invoked by do_config_operation to perform config file load. It replaces the existing
         TC conf file with a new file.
 
@@ -649,7 +649,9 @@ class Dispatcher(WindowsService):
                 latch.count_down()
 
         cmd = ConfigCommand(cmd_type, path=file_path,
-                            value_string=value_string)
+                            value_string=value_string,
+                            header_string=None,
+                            value=None)
 
         self._broker.mqtt_subscribe(cmd.create_response_topic(), on_command)
         self._broker.mqtt_publish(cmd.create_request_topic(), cmd.create_payload())

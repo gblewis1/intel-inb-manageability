@@ -71,8 +71,8 @@ def get_platform_ca_certs() -> Union[bool, str]:
 
 def is_enough_space_to_download(uri: CanonicalUri,
                                 destination_repo: IRepo,
-                                username: str = None,
-                                password: str = None) -> bool:
+                                username: Optional[str] = None,
+                                password: Optional[str] = None) -> bool:
     """Checks if enough free space exists on platform to hold download.
 
     Calculates the file size from the server and checks if required free space is available on
@@ -334,7 +334,7 @@ def verify_source(source: Optional[str], dispatcher_callbacks: DispatcherCallbac
 
             # Create command object for pre install check
 
-    cmd = ConfigCommand('get_element', TRUSTED_REPOSITORIES_LIST)
+    cmd = ConfigCommand('get_element', path=TRUSTED_REPOSITORIES_LIST, value=None, header_string=None, value_string=None)
     # Subscribe to response channel using the same request ID
     dispatcher_callbacks.broker_core.mqtt_subscribe(cmd.create_response_topic(), on_command)
 

@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 
 class SOTAUtil:  # FIXME intermediate step in refactor
-    def check_diagnostic_disk(self, estimated_size: int, dispatcher_callbacks: DispatcherCallbacks) -> None:
+    def check_diagnostic_disk(self, estimated_size: Union[int, float], dispatcher_callbacks: DispatcherCallbacks) -> None:
         """Checks if there is sufficient size for an update with diagnostic agent
 
         @param estimated_size: estimated install size

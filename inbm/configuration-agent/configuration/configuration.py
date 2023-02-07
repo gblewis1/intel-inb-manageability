@@ -11,6 +11,7 @@ import os
 import platform
 import signal
 import sys
+import types
 from logging.config import fileConfig
 from time import sleep
 
@@ -49,7 +50,7 @@ class Configuration(WindowsService):
 
         super().__init__(args)
 
-    def _set_up_signal_handlers(self, handler: Callable[[signal.Signals, Any], None]) -> None:
+    def _set_up_signal_handlers(self, handler: Callable[[int, Optional[types.FrameType]], Any]) -> None:
         # Register with systemd for termination.
         signal.signal(signal.SIGTERM, handler)
         # Terminate on control-c from user."""
@@ -81,7 +82,7 @@ class Configuration(WindowsService):
 
         self.running = True
 
-        def _sig_handler(signo, _):
+        def _sig_handler(signo: int, _: Optional[types.FrameType]):
             if signo in (signal.SIGINT, signal.SIGTERM):
                 self.running = False
 

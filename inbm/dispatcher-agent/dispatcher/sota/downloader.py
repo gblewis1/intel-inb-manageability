@@ -17,11 +17,13 @@ from ..packagemanager.irepo import IRepo
 from ..dispatcher_callbacks import DispatcherCallbacks
 from inbm_common_lib.utility import CanonicalUri
 
+import abc
+
 
 logger = logging.getLogger(__name__)
 
 
-class Downloader:
+class Downloader(abc.ABC):
     """Abstract class to download SOTA update/upgrade"""
 
     def __init__(self) -> None:
@@ -65,6 +67,7 @@ class Downloader:
         logger.debug(f"System mender release date: {platform_mender_date}")
         return True if manifest_release_date > platform_mender_date else False
 
+    @abc.abstractmethod
     def check_release_date(self, release_date: Optional[str]) -> bool:
         pass
 
@@ -121,7 +124,10 @@ class WindowsDownloader(Downloader):
         logger.debug("")
 
     def check_release_date(self, release_date: Optional[str]) -> bool:
-        pass
+        """
+        @return True always as Windows doesn't need to check release date
+        """
+        return True
 
 
 class YoctoDownloader(Downloader):

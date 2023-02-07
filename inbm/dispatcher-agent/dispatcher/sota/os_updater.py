@@ -10,7 +10,7 @@ import logging
 import re
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 from abc import ABC, abstractmethod
 
 from inbm_common_lib.utility import CanonicalUri
@@ -68,7 +68,8 @@ class OsUpdater(ABC):  # pragma: no cover
         pass
 
     @staticmethod
-    def get_estimated_size() -> int:
+    @abstractmethod
+    def get_estimated_size() -> Union[int, float]:
         """Gets the size of the update
         @return: 0 if size is freed. Returns in bytes of size consumed
         """
@@ -127,7 +128,7 @@ class DebianBasedUpdater(OsUpdater):
         return CommandList([]).cmd_list
 
     @staticmethod
-    def get_estimated_size() -> int:
+    def get_estimated_size() -> Union[int, float]:
         """Gets the size of the update
 
         @return: Returns 0 if size is freed. Returns in bytes of size consumed
@@ -144,7 +145,7 @@ class DebianBasedUpdater(OsUpdater):
         return DebianBasedUpdater._get_estimated_size_from_apt_get_upgrade(upgrade)
 
     @staticmethod
-    def _get_estimated_size_from_apt_get_upgrade(upgrade_output: str) -> int:
+    def _get_estimated_size_from_apt_get_upgrade(upgrade_output: str) -> Union[int, float]:
         logger.debug("")
         output = "\n".join([k for k in upgrade_output.splitlines() if 'After this operation' in k])
 
@@ -263,7 +264,7 @@ class WindowsUpdater(OsUpdater):
         @param repo: Directory on disk where update has been downloaded, if given in manifest.
         @return: Command list to execute to perform update.
         """
-        pass
+        raise NotImplementedError()
 
     def update_local_source(self, file_path: str) -> List[str]:
         """Concrete class method to create command list to update from a remote source for Windows OS.
@@ -271,7 +272,7 @@ class WindowsUpdater(OsUpdater):
         @param file_path: path to local file
         @return: Command list to execute to perform update.
         """
-        pass
+        raise NotImplementedError()
 
     @staticmethod
     def get_estimated_size() -> int:

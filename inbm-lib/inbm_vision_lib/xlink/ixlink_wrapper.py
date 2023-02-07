@@ -154,19 +154,19 @@ class IXlinkWrapper(ABC):
 
         pass
 
-    @abstractmethod
-    def get_xlink_device_status(self) -> int:
-        """ Check the xlink device status.
+    # @abstractmethod
+    # def get_xlink_device_status(self) -> int:
+    #     """ Check the xlink device status.
 
-            XLINK_DEV_OFF = 0,      // device is off
-            XLINK_DEV_ERROR,        // device is busy and not available
-            XLINK_DEV_BUSY,         // device is available for use
-            XLINK_DEV_RECOVERY,     // device is in recovery mode
-            XLINK_DEV_READY         // device HW failure is detected
+    #         XLINK_DEV_OFF = 0,      // device is off
+    #         XLINK_DEV_ERROR,        // device is busy and not available
+    #         XLINK_DEV_BUSY,         // device is available for use
+    #         XLINK_DEV_RECOVERY,     // device is in recovery mode
+    #         XLINK_DEV_READY         // device HW failure is detected
 
-            @return: status of xlink device
-        """
-        pass
+    #         @return: status of xlink device
+    #     """
+    #     pass
 
     @abstractmethod
     def boot_device(self) -> None:

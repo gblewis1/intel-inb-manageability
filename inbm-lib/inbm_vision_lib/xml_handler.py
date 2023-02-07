@@ -28,7 +28,7 @@ class XmlHandler:
     @param schema_location: location of schema file
     """
 
-    def __init__(self, xml: Union[str, pathlib.Path], schema_location: str = None) -> None:
+    def __init__(self, xml: Union[str, pathlib.Path], schema_location: Optional[str] = None) -> None:
         self._xml = xml
         self._schema_location = schema_location
         with ThreadPoolExecutor(max_workers=1) as executor:
@@ -39,7 +39,7 @@ class XmlHandler:
                 except TimeoutError as err:
                     raise XmlException("XML Parser timed out.") from err
 
-    def _validate_schema(self, xml_file: str = None) -> None:
+    def _validate_schema(self, xml_file: Optional[str] = None) -> None:
         if self._schema_location is not None:
             if not os.path.exists(self._schema_location):
                 raise XmlException("Schema file not found.")

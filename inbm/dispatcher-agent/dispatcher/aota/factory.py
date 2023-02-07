@@ -11,7 +11,8 @@ from typing import Optional, Any, Mapping
 from dispatcher.dispatcher_callbacks import DispatcherCallbacks
 from dispatcher.config_dbs import ConfigDbs
 
-from inbm_lib.detect_os import detect_os, LinuxDistType, is_inside_container
+from inbm_lib.detect_os import detect_os, LinuxDistType
+import inbm_lib
 
 from .constants import DOCKER, COMPOSE, APPLICATION
 from .application_command import Application, CentOsApplication, UbuntuApplication
@@ -37,7 +38,7 @@ def get_app_os(dispatcher_callbacks: DispatcherCallbacks, parsed_manifest: Mappi
     our_os = detect_os()
     if our_os == LinuxDistType.Ubuntu.name:
         return UbuntuApplication(dispatcher_callbacks, parsed_manifest, dbs)
-    elif our_os == LinuxDistType.CentOS.name and is_inside_container:
+    elif (our_os == LinuxDistType.CentOS.name) and inbm_lib.detect_os.is_inside_container():
         return CentOsApplication(dispatcher_callbacks, parsed_manifest, dbs)
     else:
         raise AotaError(f'Application commands are unsupported on the OS: {detect_os()}')

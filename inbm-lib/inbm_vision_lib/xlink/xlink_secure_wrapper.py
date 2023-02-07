@@ -8,6 +8,7 @@
 import logging
 import threading
 import os
+import abc
 from ctypes import *
 from threading import Lock
 from typing import Callable, Tuple
@@ -287,12 +288,13 @@ class XlinkSecureWrapper(IXlinkWrapper):
         """Receive message"""
         pass
 
-    def get_xlink_device_status(self) -> int:
-        """ Check the xlink device status.
+    # @abc.abstractmethod
+    # def get_xlink_device_status(self) -> int:
+    #     """ Check the xlink device status.
         
-            @return: status of xlink device
-        """
-        pass
+    #         @return: status of xlink device
+    #     """
+    #     pass
 
     def _write_data_via_secured(self, message: str):
         while self._running and self._write_data_lock.acquire():
