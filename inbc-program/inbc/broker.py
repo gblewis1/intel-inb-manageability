@@ -9,7 +9,6 @@
 import logging
 from typing import Any
 
-from inbc import shared
 from .command.command_factory import create_command_factory
 from .constants import MQTT_HOST, CA_CERTS, CLIENT_CERTS, CLIENT_KEYS
 from .ibroker import IBroker
