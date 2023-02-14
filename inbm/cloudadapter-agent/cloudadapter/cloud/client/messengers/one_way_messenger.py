@@ -14,6 +14,7 @@ from datetime import datetime
 from typing import Optional
 from threading import Thread, Lock
 
+
 class OneWayMessenger(Messenger):
 
     def __init__(self, topic_formatter: Formatter, payload_formatter: Formatter, connection: MQTTConnection) -> None:
