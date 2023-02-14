@@ -80,7 +80,7 @@ class TestINBC(TestCase):
         with self.assertRaises(SystemExit):
             self.arg_parser.parse_args(
                 ['fota', '-u', 'https://abc.com/test.tar', '-r', '12-31-2024',
-                 '-m', 'Intel', '--target', '123ABC', '456DEF'])
+                 '-m', 'Intel', '456DEF'])
         self.assertRegexpMatches(mock_stderr.getvalue(), r"Not a valid date - format YYYY-MM-DD:")
 
     @patch('inbm_lib.mqttclient.mqtt.mqtt.Client.reconnect')
@@ -234,7 +234,7 @@ class TestINBC(TestCase):
         self.assertRegexpMatches(mock_stderr.getvalue(), r"Not a valid date - format YYYY-MM-DD:")
 
     @patch('inbc.parser.detect_os', return_value='NonUbuntu')
-    def test_create_pota_uri_manifest_nohddl_non_ubuntu(self, mock_os):
+    def test_create_pota_uri_manifest_non_ubuntu(self, mock_os):
         s = self.arg_parser.parse_args(
             ['pota', '-fu', '/var/cache/manageability/repository-tool/fip.bin', '-su',
              '/var/cache/manageability/repository-tool/file.mender'])

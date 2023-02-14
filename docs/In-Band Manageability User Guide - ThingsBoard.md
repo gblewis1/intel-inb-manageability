@@ -837,11 +837,8 @@ Refer [**Creating AOTA Package**](#creating-aota-package)
 **NOTE:** 
 > The Device Reboot is an optional field.
 
-For any Xlink driver update it is mandatory to reboot the device.
-
 Input `yes` for Device Reboot as seen below.
 
-You can only use signed packages to update Xlink Driver application
 <p align="center">
 <img src="media/In-Band Manageability User Guide - ThingsBoard/media/image33.PNG" style="width:5.64166in;height:5.95643in" />
 </p>

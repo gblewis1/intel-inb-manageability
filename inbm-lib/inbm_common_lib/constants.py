@@ -1,5 +1,5 @@
 """
-    Constants used by both inbm-vision and inbm.
+    Constants used by inbm.
 
     Copyright (C) 2017-2022 Intel Corporation
     SPDX-License-Identifier: Apache-2.0

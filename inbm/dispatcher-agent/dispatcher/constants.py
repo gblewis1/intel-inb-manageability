@@ -16,7 +16,6 @@ DEFAULT_LOGGING_PATH = str(INTEL_MANAGEABILITY_ETC_PATH_PREFIX /
                            'public' / 'dispatcher-agent' / 'logging.ini')
 
 PROCEED_WITHOUT_ROLLBACK_DEFAULT = False
-HOST_WITH_NODES_DEFAULT = False
 
 # Workload Orchestration
 ORCHESTRATOR_RESPONSE_DEFAULT = False
@@ -37,10 +36,6 @@ DIAGNOSTIC_RESP_CHANNEL = 'diagnostic/response/'
 CONFIGURATION_DISPATCHER_UPDATE_CHANNEL = 'configuration/update/dispatcher/+'
 CONFIGURATION_ALL_AGENTS_UPDATE_CHANNEL = 'configuration/update/all/+'
 CONFIGURATION_SOTA_UPDATE_CHANNEL = 'configuration/update/sota/+'
-TARGET_OTA_CMD_CHANNEL = 'ma/request/install'
-TARGET_PROVISION = 'ma/request/provision'
-TARGET_CMD_RESTART = 'ma/request/restart'
-VISION_CMD_QUERY = 'ma/request/query'
 
 # Publishing channels
 CUSTOM_CMD_CHANNEL = 'manageability/cmd/custom'
@@ -69,8 +64,6 @@ TEST_ADAPTER_AGENT = 'dispatcher'
 # Device local cache
 CACHE = str(INTEL_MANAGEABILITY_CACHE_PATH_PREFIX)
 REPO_CACHE = str(INTEL_MANAGEABILITY_CACHE_PATH_PREFIX / 'repository-tool')
-
-TargetType = Enum('TargetType', 'none vision node')
 
 SUCCESS_RESTART = "Restart Command Success"
 

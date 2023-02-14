@@ -87,30 +87,6 @@ else
     # Fix permissions even if we end up not reprovisioning
     fix_permissions
 
-    # Check for HDDL mode; always reprovision with HDDL mode due to time sync issue.
-    KMB_PCIE_EP_STATUS="/proc/device-tree/soc/pcie_ep@37000000/status"
-    THB_PCIE_EP_STATUS="/proc/device-tree/soc/pcie_ep@82000000/status"
-
-    if [ -f $KMB_PCIE_EP_STATUS ]; then
-        PCIE_EP_STATUS=$KMB_PCIE_EP_STATUS
-    elif [ -f $THB_PCIE_EP_STATUS ]; then
-        PCIE_EP_STATUS=$THB_PCIE_EP_STATUS
-    else
-         PCIE_EP_STATUS=""
-    fi
-
-    if [ ! $PCIE_EP_STATUS == "" ]; then
-        IS_HDDL=$(cat $PCIE_EP_STATUS | tr -d '\0')
-        echo $IS_HDDL
-        if [ $IS_HDDL == "okay" ]; then
-            echo HDDL mode enabled.
-            # always reprovision certs in HDDL mode
-	    do_provision
-	    exit 0
-	fi
-    fi
-
-    # Otherwise, if not in HDDL mode:
     echo Provisioning already previously done. Checking mqtt-ca cert expiration.
     let CertExpireThreshold=60*60*24*7  # one week
     if openssl x509 -checkend "$CertExpireThreshold" -noout -in "$TC_PUBLIC"/mqtt-ca/mqtt-ca.crt

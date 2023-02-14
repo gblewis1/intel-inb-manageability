@@ -10,7 +10,7 @@ from typing import List
 def search_keyword(payload: str, words: List[str]) -> bool:
     """Stop INBC after receiving expected response
 
-    @param payload: MQTT message received from vision-agent
+    @param payload: MQTT message received
     @param words: expected keywords in the message
     @return: True if keyword found, False if keyword not found in message
     """

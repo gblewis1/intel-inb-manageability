@@ -30,7 +30,7 @@
 - Talks to the `diagnostic-agent` for pre/post install checks to confirm gateway/device health before performing OTA.  
   - Before install OTA check is done for all scenarios.  
   - After install OTA check is done only for successful installations.
-- Relay requests to the `vision-agent` for HDDL related OTA, restart, and configuration requests.
+
 
 ## Agent Communication 
 
@@ -42,8 +42,6 @@ The agent publishes to the following topics:
   - Request response: `manageability/response`
   - Perform pre and post diagnostic checks: `diagnostic/command/{command}`
   - Dynamic telemetry updates: `telemetry/update`
-  - Pass on HDDL OTA requests to vision-agent: `ma/request/{command}`
-  - Pass on HDDL configuration requests to vision-agent: `ma/configuration/update/{command}`
   - Informs diagnostic-agent remediation manager to remove a specific container: `remediation/container`
   - Informs diagnostic-agent remediation manager to remove a specific image:`remediation/image`
   - dispatcher-agent state: dispatcher/state` when dead/running
@@ -56,7 +54,6 @@ The agent subscribes to the following topics:
   - Receive configuration changes: `configuration/update/dispatcher/+`
   - Receive DBS configuration setting changes: `configuration/update/all/+`
   - Receive SOTA configuration changes: `configuration/update/sota/+`
-  - HDDL requests from cloud: `ma/request/{command}`  command=install, provision, restart, query
   - Agent states: `+/state`
  
 ❗`+` is a wild-card indicating single level thus matching `dispatcher/state` or `<another-agent>/state`

@@ -1,6 +1,6 @@
 /*
 
-*/
+ */
 
 package main
 
@@ -59,7 +59,7 @@ func main() {
 
 	for _, each := range []string{
 		"dispatcher-agent", "telemetry-agent", "diagnostic-agent", "configuration-agent",
-		"cloudadapter-agent", "inbc-program", "vision-agent", "node-agent", "cmd-program"} {
+		"cloudadapter-agent", "inbc-program", "cmd-program"} {
 		setUpClientDirectories(secretDir, publicDir, daysExpiry, each)
 	}
 }

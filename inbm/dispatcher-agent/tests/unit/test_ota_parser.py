@@ -36,7 +36,7 @@ class TestOtaParser(TestCase):
     def test_parse_pota_a(self):
         p = PotaParser('remote', self.mock_disp_obj)
         result = p.parse(
-            {'fota': '', 'sota': '', 'targetType': 'node', 'targets': ' ', 'fetch': 'https://www.google.com/'}, {}, self.parsed)
+            {'fota': '', 'sota': '', 'fetch': 'https://www.google.com/'}, {}, self.parsed)
         self.assertTrue('fota' in result)
 
 

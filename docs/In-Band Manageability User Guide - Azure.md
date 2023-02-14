@@ -762,11 +762,7 @@ the **Dashboard** tab.
 
 **NOTE:** The Device Reboot is an optional field.
 
-For any Xlink driver update it is mandatory to reboot the device.
-
 Input “yes” for Device Reboot as seen below.
-
-You can only use signed packages to update Xlink Driver application
 
 <img src="media/In-Band Manageability User Guide - Azure/media/image51.png" alt="Graphical user interface, application Description automatically generated" style="width:5.64166in;height:5.95643in" />
 

@@ -1,4 +1,4 @@
-""" Parse inbm/inbm-vision version file information
+""" Parse inbm version file information
 
     Copyright (C) 2017-2022 Intel Corporation
     SPDX-License-Identifier: Apache-2.0

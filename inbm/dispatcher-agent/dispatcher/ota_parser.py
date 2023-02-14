@@ -213,17 +213,8 @@ class PotaParser(OtaParser):
         """
         logger.debug(" ")
 
-        target_type = resource.get('targetType', None)
-        if target_type:
-            targets = resource.get('targets')
-            [resource.pop(key) for key in ['targetType', 'targets']] if targets else \
-                [resource.pop(key) for key in ['targetType']]
-
         for key in resource.keys():
             ota_resource = parsed.get_children(f'ota/type/pota/{key}')
-            if target_type:
-                ota_resource['targetType'] = target_type
-                ota_resource['targets'] = targets
             if key == 'fota':
                 fota_args = FotaParser(self._repo_type, self._callback)
                 kwargs.update({key: fota_args.parse(ota_resource, kwargs, parsed)})

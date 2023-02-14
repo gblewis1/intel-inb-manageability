@@ -56,8 +56,6 @@ The following outlines the manifest parameters used to perform the supported OTA
 | `<type>`                                 | `<type>`                                            |         R          ||
 | `<fota name=''>`                         | `<fota name='text'>`                                |         R          | Text must be compliant with XML Standards                                                                                                                   |
 | `<fetch></fetch>`                        | `<fetch>http://yoururl:80/BIOSUPDATE.tar</fetch>`   |         R          | FOTA path created in repository                                                                                                                             |
-| `<targetType></targetType>`              | `<targetType>node</targetType>`                     |         O          | [host or node] Used when updating either the host of vision cards (host) or vision cards (node)                                                             |
-| `<targets></targets>`                    | `<targets><target>389C0A</target></targets>`        |         O          | Used when targetType=node.  Designates the Ids of the nodes to update                                                                                       |
 | `<signature></signature>`                | `<signature>ABC123</signature>`                     |         O          | Digital signature of *.tar file.                                                                                                                            |
 | `<biosversion></biosversion>`            | `<biosversion>A..ZZZZ.B11.1</biosversion>`          |         R          | Verify with BIOS Vendor (IBV)                                                                                                                               |
 | `<vendor></vendor>`                      | `<vendor>VendorName</vendor>`                       |         R          | Verify with BIOS Vendor (IBV)                                                                                                                               |
@@ -101,35 +99,6 @@ description will trigger a FOTA update via Manifest.
 </manifest>
 ```
 
-### Sample FOTA Manifest - Target Intel Vision cards: 
-```xml
-<?xml version='1.0' encoding='utf-8'?>
-<manifest>
-    <type>ota</type>
-    <ota>
-        <header>
-            <type>fota</type>
-            <repo>remote</repo>
-        </header>
-        <type>
-            <fota name='sample'>
-                <fetch>http://yoururl/package.tar</fetch>
-                <targetType>node</targetType>
-                <targets>
-                    <target>000732767ffb-16781312</target>
-                    <target>000732767ffb-16780544</target>
-                </targets>
-                <biosversion>U-boot 2021.01</biosversion>
-                <vendor>Intel</vendor>
-                <manufacturer>intel</manufacturer>
-                <product>kmb-m2</product>
-                <releasedate>2022-04-15</releasedate>
-            </fota>
-        </type>
-    </ota>
-</manifest>
-```
-
 ## SOTA
 
 ### SOTA Manifest Parameters 
@@ -149,8 +118,6 @@ description will trigger a FOTA update via Manifest.
 | `<type>`                                 | `<type>`                                     |         R         ||
 | `<sota>`                                 | `<sota>`                                     |         R         ||
 | `<cmd></cmd>`                            | `<cmd logtofile=”Y”>update</cmd>`            |         R         ||
-| `<targetType></targetType>`              | `<targetType>node</targetType>`              |         O         | [host or node] Used when updating either the host of vision cards (host) or vision cards (node)                                                             |
-| `<targets></targets>`                    | `<targets><target>389C0A</target></targets>` |         O         | Used when targetType=node.  Designates the Ids of the nodes to update                                                                                       |
 | `<fetch></fetch>`                        | `<fetch>https://yoururl/file.mender</fetch>` |         O         | Used to download mender file from remote repository. (use repo=remote)                                                                                      |
 | `<path></path>`                          | `<path>/var/cache/file.mender</path>`        |         O         | Used to update using a local mender file  .  (use repo=local)                                                                                               |
 | `<username></username>`                  | `<username>xx</username>`                    |         O         | Username for remote repository                                                                                                                              |                                                                 |
@@ -204,67 +171,6 @@ description will trigger a FOTA update via Manifest.
 </manifest>
 ```
 
-### Sample SOTA Manifest - Target specific Intel Vision cards: 
-
-- Specific targets identified in <targets></targets> section.
-
-- The Vision-agent will double-check to ensure that the targets are eligible for the upgrade.
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>ota</type>
-    <ota>
-        <header>
-            <type>sota</type>
-            <repo>remote</repo>
-        </header>
-        <type>
-            <sota>
-                <cmd logtofile="Y">update</cmd>
-                <fetch>https://yoururl/mender.file</fetch>
-                <username>user</username>
-                <password>pwd</password>
-                <targetType>node</targetType>
-                <targets>
-                    <target>000732767ffb-16781312</target>
-                    <target>000732767ffb-16780544</target>
-                </targets>
-                <release-date>2020-0101</release_date>
-            </sota>
-        </type>
-    </ota>
-</manifest>
-```
-
-### Sample SOTA Manifest - Target all eligible Intel Vision cards: 
-
-- No <targets></targets> section included.
-- The Vision-agent will determine which Vision cards are eligible for the upgrade based on its internal registry.  It will compare the release-date in this manifest with the release date of each vision card in its registry.
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>ota</type>
-    <ota>
-        <header>
-            <type>sota</type>
-            <repo>remote</repo>
-        </header>
-        <type>
-            <sota>
-                <cmd logtofile="Y">update</cmd>
-                <fetch>https://yoururl/mender.file</fetch>
-                <username>user</username>
-                <password>pwd</password>
-                <targetType>node</targetType>
-                <release-date>2020-0101</release_date>
-            </sota>
-        </type>
-    </ota>
-</manifest>
-```
-
 ## POTA
 The POTA manifest is used to perform both a FOTA and SOTA update at the same time to avoid conflicts when trying to update them individually.  This manifest combines both the FOTA and SOTA into one.
 
@@ -284,12 +190,8 @@ The POTA manifest is used to perform both a FOTA and SOTA update at the same tim
 | `</header>`                              | `</header>`                                                     |         R         |                                                                                                 |
 | `<type>`                                 | `<type>`                                                        |         R         |                                                                                                 |
 | `<pota>`                                 | `<pota>`                                                        |         R         ||
-| `<targetType></targetType>`              | `<targetType>node</targetType>`                                 |         O         | [host or node] Used when updating either the host of vision cards (host) or vision cards (node) |
-| `<targets></targets>`                    | `<targets><target>389C0A</target></targets>`                    |         O         | Used when targetType=node.  Designates the Ids of the nodes to update                           |
 | `<fota name=''>`                         | `<fota name='text'>`                                            |         R         | Text must be compliant with XML Standards                                                       |
 | `<fetch></fetch>`                        | `<fetch>http://yoururl:80/BIOSUPDATE.tar</fetch>`               |         R         | FOTA path created in repository                                                                 |
-| `<targetType></targetType>`              | `<targetType>node</targetType>`                                 |         O         | [host or node] Used when updating either the host of vision cards (host) or vision cards (node) |
-| `<targets></targets>`                    | `<targets><targets><target>389C0A</target></targets></targets>` |         O         | Used when targetType=node.  Designates the Ids of the nodes to update                           |
 | `<signature></signature>`                | `<signature>ABC123</signature>`                                 |         O         | Digital signature of *.tar file.                                                                |
 | `<biosversion></biosversion>`            | `<biosversion>A..ZZZZ.B11.1</biosversion>`                      |         R         | Verify with BIOS Vendor (IBV)                                                                   |
 | `<vendor></vendor>`                      | `<vendor>VendorName</vendor>`                                   |         R         | Verify with BIOS Vendor (IBV)                                                                   |
@@ -304,8 +206,6 @@ The POTA manifest is used to perform both a FOTA and SOTA update at the same tim
 | `</fota>`                                | `</fota>`                                                       |         R         ||
 | `<sota>`                                 | `<sota>`                                                        |         R         ||
 | `<cmd></cmd>`                            | `<cmd logtofile=”Y”>update</cmd>`                               |         R         ||
-| `<targetType></targetType>`              | `<targetType>node</targetType>`                                 |         O         | [host or node] Used when updating either the host of vision cards (host) or vision cards (node) |
-| `<targets></targets>`                    | `<targets><targets><target>389C0A</target></targets></targets>` |         O         | Used when targetType=node.  Designates the Ids of the nodes to update                           |
 | `<fetch></fetch>`                        | `<fetch>https://yoururl/file.mender</fetch>`                    |         O         | Used to download mender file from remote repository. (use repo=remote)                          |
 | `<path></path>`                          | `<path>/var/cache/file.mender</path>`                           |         O         | Used to update using a local mender file  .  (use repo=local)                                   |
 | `<username></username>`                  | `<username>xx</username>`                                       |         O         | Username for remote repository                                                                  |                                                                 |
@@ -316,74 +216,6 @@ The POTA manifest is used to perform both a FOTA and SOTA update at the same tim
 | `</type>`                                | `</type>`                                                       |         R         |                                                                                                 |
 | `</ota>`                                 | `</ota>`                                                        |         R         |                                                                                                 |
 | `</manifest>`                            | `</manifest>`                                                   |         R         |                                                                                                 |
-
-### POTA Example Manifest - Targets not specified
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-   <type>ota</type>
-   <ota> 
-      <header>
-         <type>pota</type>
-         <repo>remote</repo>
-      </header>
-      <type>
-         <pota>
-            <targetType>node</targetType>
-            <fota name="sample">
-               <fetch>https://yoururl/fip-hddl2.bin</fetch>
-               <biosversion>5.12</biosversion>
-               <manufacturer>intel</manufacturer>
-               <product>kmb-hddl2</product>
-               <vendor>Intel</vendor>
-               <releasedate>2021-02-08</releasedate>
-            </fota>
-            <sota>
-               <cmd logtofile="y">update</cmd>
-               <fetch>https://yoururl/core-image-minimal-keembay-20201028223515.dm-verity.mender</fetch>
-               <release_date>2021-10-10</release_date>
-            </sota>
-         </pota>
-      </type>
-   </ota>
-</manifest>
-```
-
-### POTA Example Manifest - Targets specified
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-   <type>ota</type>
-   <ota> 
-      <header>
-         <type>pota</type>
-         <repo>remote</repo>
-      </header>
-      <type>
-         <pota>
-            <targetType>node</targetType>
-            <targets>
-               <target>000732767ffb-16781312</target>
-                <target>000732767ffb-16780544</target>
-            </targets>
-            <fota name="sample">
-               <fetch>https://yoururl/fip-hddl2.bin</fetch>
-               <biosversion>5.12</biosversion>
-               <manufacturer>intel</manufacturer>
-               <product>kmb-hddl2</product>
-               <vendor>Intel</vendor>
-               <releasedate>2021-02-08</releasedate>
-            </fota>
-            <sota>
-               <cmd logtofile="y">update</cmd>
-               <fetch>https://yoururl/core-image-minimal-keembay-20201028223515.dm-verity.mender</fetch>
-               <release_date>2021-10-10</release_date>
-            </sota>
-         </pota>
-      </type>
-   </ota>
-</manifest>
-```
 
 ## AOTA
 
@@ -720,7 +552,7 @@ The POTA manifest is used to perform both a FOTA and SOTA update at the same tim
 
 ### Query Manifest Parameters 
 
-The query command can be used to gather information about the system and the Vision cards.
+The query command can be used to gather information about the system.
 
 | XML Tags                                 | Definition                     | Required/Optional | Notes                         |
 |:-----------------------------------------|:-------------------------------|:-----------------:|:------------------------------|
@@ -730,17 +562,15 @@ The query command can be used to gather information about the system and the Vis
 | `<cmd></cmd>`                            | `<cmd>query</cmd>`             |         R         | will always be 'query'        |
 | `<query>`                                | `<query>`                      |         R         |                               |
 | `<option></option>`                      | `<option>all</option>`         |         R         | [Available Options](Query.md) |
-| `<targetType></targetType>`              | `<targetType>node</targetType>`|         O         | [vision, node] Used when updating either the host of vision cards (host) or vision cards (node) |
-| `<targets></targets>`                    | `<targets><target>389C0A</target></targets>` |         O         | Used when targetType=node.  Designates the Ids of the nodes to update    
 | `</query>`                               | `</query>`                     |         R         |                               |
 | `</manifest>`                            | `</manifest>`                  |         R         |                               |
 
 
-## Query types supported on Edge and HDDL platforms
+## Query types supported on Edge platforms
   
-| Supported on Edge only  | Supported on HDDL only | Supported on both Edge and HDDL |
-|:------------------------|:-----------------------|:-------------------------------:|
-|  swbom                  | security, status, guid | all, hw, fw, os, version        |  
+| Supported on Edge              |
+|:-------------------------------|
+| all, hw, fw, os, version, swbom|
 
 
 #### Example of all query manifest example on Edge device 
@@ -751,35 +581,6 @@ The query command can be used to gather information about the system and the Vis
     <cmd>query</cmd>
     <query>
         <option>all</option>
-    </query>
-</manifest>
-```
-
-#### Example of all query manifest on Vision-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>all</option>
-        <targetType>vision</targetType>  
-    </query>
-</manifest>
-```
-
-#### Example of all query manifest on Node-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>all</option>
-        <targetType>node</targetType>
-        <targets>
-            <target>node-id</target>
-	</targets>
     </query>
 </manifest>
 ```
@@ -796,34 +597,6 @@ The query command can be used to gather information about the system and the Vis
 </manifest>
 ```
 
-#### Example of hw query manifest on Vision-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>hw</option>
-        <targetType>vision</targetType>  
-    </query>
-</manifest>
-```
-
-#### Example of hw query manifest on Node-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>hw</option>
-        <targetType>node</targetType>
-        <targets>
-            <target>node-id</target>
-	</targets>
-    </query>
-</manifest>
-```
 
 #### Example of fw query manifest example on Edge device 
 ```xml
@@ -833,35 +606,6 @@ The query command can be used to gather information about the system and the Vis
     <cmd>query</cmd>
     <query>
         <option>fw</option>
-    </query>
-</manifest>
-```
-
-#### Example of fw query manifest on Vision-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>fw</option>
-        <targetType>vision</targetType>  
-    </query>
-</manifest>
-```
-
-#### Example of fw query manifest on Node-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>fw</option>
-        <targetType>node</targetType>
-        <targets>
-            <target>node-id</target>
-	</targets>
     </query>
 </manifest>
 ```
@@ -878,35 +622,6 @@ The query command can be used to gather information about the system and the Vis
 </manifest>
 ```
 
-#### Example of os query manifest on Vision-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>os</option>
-        <targetType>vision</targetType>  
-    </query>
-</manifest>
-```
-
-#### Example of os query manifest on Node-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>os</option>
-        <targetType>node</targetType>
-        <targets>
-            <target>node-id</target>
-	</targets>
-    </query>
-</manifest>
-```
-
 #### Example of version query manifest example on Edge device 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -919,121 +634,6 @@ The query command can be used to gather information about the system and the Vis
 </manifest>
 ```
 
-#### Example of version query manifest on Vision-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>version</option>
-        <targetType>vision</targetType>  
-    </query>
-</manifest>
-```
-
-#### Example of version query manifest on Node-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>version</option>
-        <targetType>node</targetType>
-        <targets>
-            <target>node-id</target>
-	</targets>
-    </query>
-</manifest>
-```
-
-#### Example of security query manifest on Vision-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>security</option>
-        <targetType>vision</targetType>  
-    </query>
-</manifest>
-```
-
-#### Example of security query manifest on Node-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>security</option>
-        <targetType>node</targetType>
-        <targets>
-	    <target>node-id</target>
-	</targets>
-    </query>
-</manifest>
-```
-
-#### Example of status query manifest on Vision-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>status</option>
-        <targetType>vision</targetType>  
-    </query>
-</manifest>
-```
-
-#### Example of status query manifest on Node-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>status</option>
-        <targetType>node</targetType>
-        <targets>
-            <target>node-id</target>
-	</targets>
-    </query>
-</manifest>
-```
-
-#### Example of guid query manifest on Vision-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>guid</option>
-        <targetType>vision</targetType>  
-    </query>
-</manifest>
-```
-
-#### Example of guid query manifest on Node-agent 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest>
-    <type>cmd</type>
-    <cmd>query</cmd>
-    <query>
-        <option>guid</option>
-        <targetType>node</targetType>
-        <targets>
-            <target>node-id</target>
-        </targets>
-    </query>
-</manifest>
-```
 
 #### Example of swbom query manifest on Edge device
 ```xml
@@ -1049,18 +649,6 @@ The query command can be used to gather information about the system and the Vis
 
 ## Configuration Settings
 
-On an Edge device there will be only one configuration file that this command can target; therefore you will not need to use the <targetType> and <targets> tags in the chart below.
-
-On an Intel Vision card solution, there will be 2 configuration files on the host and 2 configuration files on each node that can be targeted by the Get, Set, and Load commands.  
-The '_Append_' and '_Remove_' commands only supported on the Host agents (not vision).
-
-| \<TargetType> | System |                             Agent(s)                              |
-|:--------------|:-------|:-----------------------------------------------------------------:|
-| None          | Host   | INB = Dispatcher, Telemetry, Configuration, and Diagnostic agents |
-| vision        | Host   |                           Vision-agent                            |
-| node          | Node   |                            Node-agent                             |
-| node_client   | Node   | INB = Dispatcher, Telemetry, Configuration, and Diagnostic agents |
-
 ### Get
 
 #### Get Configuration Manifest Parameters
@@ -1071,9 +659,7 @@ The '_Append_' and '_Remove_' commands only supported on the Host agents (not vi
 | `<type></type>`                          | `<type>config</type>`                        |         R         | Always 'config'                                                                                                 |
 | `<config>`                               | `<config>`                                   |         R         |                                                                                                                 |
 | `<cmd></cmd>`                            | `<cmd>get_elemeent</cmd>`                    |         R         |                                                                                                                 |
-| `<targetType></targetType>`              | `<targetType>node</targetType>`              |         O         | [vision, node, or node_client] Used when updating either the host of vision cards (host) or vision cards (node) |
 | `<configtype>`                           | `<configtype>`                               |         R         |                                                                                                                 |
-| `<targets></targets>`                    | `<targets><target>389C0A</target></targets>` |         O         | Used when targetType=node or node_client.  Designates the Ids of the nodes to update                            |
 | `<get>`                                  | `<get>`                                      |         R         |                                                                                                                 |
 | `<path></path>`                          | `<path>minStorageMB;minMemoryMB</path>`      |         R         |                                                                                                                 |
 | `</get>`                                 | `</get>`                                     |         R         |                                                                                                                 |
@@ -1106,99 +692,6 @@ The '_Append_' and '_Remove_' commands only supported on the Host agents (not vi
 </manifest>
 ```
 
-##### Get Example on Vision-agent
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>get_element</cmd>
-        <targetType>vision</targetType>
-        <configtype>
-            <get>
-                <path>isAliveTimerSecs;heartbeatRetryLimit</path>
-            </get>
-        </configtype>
-    </config>
-</manifest>
-```
-
-##### Get Example on **ALL** Node-agents
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>get_element</cmd>
-        <targetType>node</targetType>
-        <configtype>
-            <get>
-                <path>isAliveTimerSecs;heartbeatRetryLimit</path>
-            </get>
-        </configtype>
-    </config>
-</manifest>
-```
-
-##### Get Example on **SPECIFIC** Node-agents
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>get_element</cmd>
-        <targetType>node</targetType>
-        <configtype>
-            <targets>
-                <target>000732767ffb-16781312</target>
-                <target>000732767ffb-16780544</target>
-            </targets>
-            <get>
-                <path>isAliveTimerSecs;heartbeatRetryLimit</path>
-            </get>
-        </configtype>
-    </config>
-</manifest>
-```
-
-#### Get Example on **ALL** INB Nodes
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>get_element</cmd>
-        <targetType>node_client</targetType>
-        <configtype>
-            <get>
-                <path>isAliveTimerSecs;heartbeatRetryLimit</path>
-            </get>
-        </configtype>
-    </config>
-</manifest>
-```
-
-#### Get Example on **SPECIFIC** INB Nodes
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>get_element</cmd>
-        <targetType>node_client</targetType>
-        <configtype>
-            <targets>
-                <target>000732767ffb-16781312</target>
-                <target>000732767ffb-16780544</target>
-            </targets>
-            <get>
-                <path>minStorageMB;minMemoryMB</path>
-            </get>
-        </configtype>
-    </config>
-</manifest>
-```
-
 ## Set
 
 #### Configuration Set Manifest Parameters
@@ -1209,9 +702,7 @@ The '_Append_' and '_Remove_' commands only supported on the Host agents (not vi
 | `<type></type>`                          | `<type>config</type>`                           |         R         | Always 'config'                                                                                                 |
 | `<config>`                               | `<config>`                                      |         R         |                                                                                                                 |
 | `<cmd></cmd>`                            | `<cmd>set_elemeent</cmd>`                       |         R         |                                                                                                                 |
-| `<targetType></targetType>`              | `<targetType>node</targetType>`                 |         O         | [vision, node, or node_client] Used when updating either the host of vision cards (host) or vision cards (node) |
 | `<configtype>`                           | `<configtype>`                                  |         R         |                                                                                                                 |
-| `<targets></targets>`                    | `<targets><target>389C0A</target></targets>`    |         O         | Used when targetType=node or node_client.  Designates the Ids of the nodes to update                            |
 | `<set>`                                  | `<set>`                                         |         R         |                                                                                                                 |
 | `<path></path>`                          | `<path>minStorageMB:100;minMemoryMB:200</path>` |         R         |                                                                                                                 |
 | `</set>`                                 | `</set>`                                        |         R         |                                                                                                                 |
@@ -1235,99 +726,6 @@ The '_Append_' and '_Remove_' commands only supported on the Host agents (not vi
     <config>
         <cmd>set_element</cmd>
         <configtype>
-            <set>
-                <path>minStorageMB:100;minMemoryMB:200</path>
-            </set>
-        </configtype>
-    </config>
-</manifest>
-```
-
-##### Set Example on Vision-agent
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>set_element</cmd>
-        <targetType>vision</targetType>
-        <configtype>
-            <set>
-                <path>isAliveTimerSecs:100;heartbeatRetryLimit:3</path>
-            </set>
-        </configtype>
-    </config>
-</manifest>
-```
-
-##### Example Configuration SET on **ALL** Node-agents
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>set_element</cmd>
-        <targetType>node</targetType>
-        <configtype>
-            <set>
-                <path>heartbeatResponseTimerSecs:350;registrationRetryLimit:7</path>
-            </set>
-        </configtype>
-    </config>
-</manifest>
-```
-
-##### Set Example on **SPECIFIC** Node-agents
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>set_element</cmd>
-        <targetType>node</targetType>
-        <configtype>
-            <targets>
-                <target>000732767ffb-16781312</target>
-                <target>000732767ffb-16780544</target>
-            </targets>
-            <set>
-                <path>heartbeatResponseTimerSecs:350;registrationRetryLimit:7</path>
-            </set>
-        </configtype>
-    </config>
-</manifest>
-```
-
-#### Set Example on **ALL** INB Nodes
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>set_element</cmd>
-        <targetType>node_client</targetType>
-        <configtype>
-            <set>
-                <path>minStorageMB:100;minMemoryMB:200</path>
-            </set>
-        </configtype>
-    </config>
-</manifest>
-```
-
-#### Set Example on **SPECIFIC** INB Nodes
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>set_element</cmd>
-        <targetType>node_client</targetType>
-        <configtype>
-            <targets>
-                <target>000732767ffb-16781312</target>
-                <target>000732767ffb-16780544</target>
-            </targets>
             <set>
                 <path>minStorageMB:100;minMemoryMB:200</path>
             </set>
@@ -1374,100 +772,6 @@ The '_Append_' and '_Remove_' commands only supported on the Host agents (not vi
 </manifest>
 ```
 
-##### Load Example on Vision-agent
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>load</cmd>
-        <targetType>vision</targetType>
-        <configtype>
-            <load>
-                <fetch>http://yoururl:port/intel_manageabilty_vision.conf</fetch>
-            </load>
-        </configtype>
-    </config>
-</manifest>
-```
-
-##### Load Example on **ALL** Node-agents
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>load</cmd>
-        <targetType>node</targetType>
-        <configtype>
-            <load>
-                <fetch>http://yoururl:port/intel_manageabilty_node.conf</fetch>
-            </load>
-        </configtype>
-    </config>
-</manifest>
-```
-
-##### Load Example on **SPECIFIC** Node-agents
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>load</cmd>
-        <targetType>node</targetType>
-        <configtype>
-            <targets>
-                <target>000732767ffb-16781312</target>
-                <target>000732767ffb-16780544</target>
-            </targets>
-            <load>
-                <fetch>http://yoururl:port/intel_manageabilty_node.conf</fetch>
-            </load>
-        </configtype>
-    </config>
-</manifest>
-```
-
-#### Load Example on **ALL** INB Nodes
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>load</cmd>
-        <targetType>node_client</targetType>
-        <configtype>
-            <load>
-                <fetch>http://yoururl:port/intel_manageabilty.conf</fetch>
-            </load>
-        </configtype>
-    </config>
-</manifest>
-```
-
-#### Load Example on **SPECIFIC** INB Nodes
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>load</cmd>
-        <targetType>node_client</targetType>
-        <configtype>
-            <targets>
-                <target>000732767ffb-16781312</target>
-                <target>000732767ffb-16780544</target>
-            </targets>
-            <load>
-                <fetch>http://yoururl:port/intel_manageabilty.conf</fetch>
-            </load>
-        </configtype>
-    </config>
-</manifest>
-```
-
-
 ## Append
 
 #### Configuration Append Manifest Parameters
@@ -1488,8 +792,6 @@ The '_Append_' and '_Remove_' commands only supported on the Host agents (not vi
 
 #### Append Example
 
-* Append can currently only be used on INB agents in either the Edge or Vision card solution.
-* Append would not be used on the vision or node agents
 * Append is only applicable to three configuration tags, for example,
     **trustedRepositories**, **sotaSW** and **ubuntuAptSource**
 * Path takes in key value pair format, example: trustedRepositories:  https://dummyURL.com
@@ -1502,27 +804,6 @@ The '_Append_' and '_Remove_' commands only supported on the Host agents (not vi
         <configtype>
             <append>
                 <path>trustedRepositories:https://dummyURL.com</path>
-            </append>
-        </configtype>
-    </config>
-</manifest>
-```
-
-#### Append Example on **SPECIFIC** INB Nodes
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>append</cmd>
-        <targetType>node_client</targetType>
-        <configtype>
-            <targets>
-                <target>000732767ffb-16781312</target>
-                <target>000732767ffb-16780544</target>
-            </targets>
-            <append>
-                <path>sotaSW:trtl</path>
             </append>
         </configtype>
     </config>
@@ -1548,8 +829,6 @@ The '_Append_' and '_Remove_' commands only supported on the Host agents (not vi
 | `</manifest>`                            | `</manifest>`                            |         R         |                 |
 
 #### Remove Example
-* Remove can currently only be used on INB agents in either the Edge or Vision card solution.
-* Remove would not be used on the vision or node agents
 * *Remove* is only applicable to three configuration tags, for
     example, **trustedRepositories**, **sotaSW** and
     **ubuntuAptSource**.
@@ -1567,61 +846,5 @@ The '_Append_' and '_Remove_' commands only supported on the Host agents (not vi
             </remove>
         </configtype>
     </config>
-</manifest>
-```
-
-#### Remove Example on **SPECIFIC** INB Nodes
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-    <type>config</type>
-    <config>
-        <cmd>remove</cmd>
-        <targetType>node_client</targetType>
-        <configtype>
-            <targets>
-                <target>000732767ffb-16781312</target>
-                <target>000732767ffb-16780544</target>
-            </targets>
-            <remove>
-                <path>sotaSW:trtl</path>
-            </remove>
-        </configtype>
-    </config>
-</manifest>
-```
-
-## Provision Node
-
-Provision Node is only used by the INBM Vision solution to provision a flashless device.
-
-#### Configuration Provision Node Manifest Parameters
-| Tag                                      | Example                                             | Required/Optional | Notes                                                                               |
-|:-----------------------------------------|:----------------------------------------------------|:-----------------:|:------------------------------------------------------------------------------------|
-| `<?xml version='1.0' encoding='utf-8'?>` | `<?xml version='1.0' encoding='utf-8'?>`            |         R         |                                                                                     |
-| `<manifest>`                             | `<manifest>`                                        |         R         |                                                                                     |
-| `<type></type>`                          | `<type>cmd</type>`                                  |         R         | Always 'cmd'                                                                        |
-| `<cmd></cmd>`'`                          | `<cmd>provisionNode</cmd>`                          |         R         | Always 'provisionNode'                                                              |
-| `<provisionNode>`                        | `<provisionNode>`                                   |         R         |                                                                                     |
-| `<fetch></fetch>`                        | `<fetch>https://www.repo.com/provision.tar</fetch>` |         R         |                                                                                     |
-| `<signature></signature`>                | `<signature>96e92d</signature>`                     |         O         | Signature of package–signed checksum of package.  Recommended for security purposes |
-| `<hash_algorithm></hash_algorithm`       | `<hash_algorithm>384</hash_algorithm`               |         O         | 384 or 512                                                                          |
-| `<username></username>`                  | `<username>user</username>`                         |         O         | Username used during fetch from remote repository                                   |
-| `<password><password>`                   | `<password>pwd</password>`                          |         O         | Password used during fetch from remote repository                                   |
-| `</provisionNode>`                       | `</provisionNode>`                                  |         R         |                                                                                     |
-| `</manifest>`                            | `</manifest>`                                       |         R         |                                                                                     |
-
-#### Provision Node Example
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-	<type>cmd</type>
-	<cmd>provisionNode</cmd>
-	<provisionNode>
-		<fetch>https://www.repo.com/provision.tar</fetch>
-		<signature>signature</signature>
-		<hash_algorithm>384</hash_algorithm>
-	</provisionNode>
 </manifest>
 ```
