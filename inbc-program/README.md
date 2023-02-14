@@ -231,47 +231,6 @@ inbc remove
 inbc remove --path  trustedRepositories:https://abc.com/
 ```
 
-## RESTART
-### Description
-Restart nodes
-
-### Usage
-```
-inbc restart
-```
-### Examples
-#### restart
-```
-inbc restart
-```
-
-## QUERY
-### Description
-Query device(s) for attributes
-
-### Usage
-```
-inbc query 
-   [--option, -o=[all | hw | fw |  os | swbom | version ]; default='all']  
-```
-
-### Option Results
-[Allowed Options and Results](https://github.com/intel/intel-inb-manageability/blob/develop/docs/Query.md)
-
-### Examples
-#### Return all attributes
-```
-inbc query
-```
-#### Return only 'hw' attributes
-```
-inbc query --option hw
-```
-#### Return only 'sw' attributes
-```
-inbc query --option sw
-```
-
 # Status Codes
 
  | Message         | Description                           | Result                                        |

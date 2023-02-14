@@ -2,19 +2,12 @@ from unittest import TestCase
 from mock import Mock
 from inbc.inbc_exception import InbcException
 from inbc.command.command_factory import create_command_factory
-from inbc.command.command import RestartCommand, QueryCommand
 from inbc.command.ota_command import FotaCommand, SotaCommand, PotaCommand
 from inbc.command.config_command import LoadConfigCommand, SetConfigCommand, GetConfigCommand, \
     AppendConfigCommand, RemoveConfigCommand
 
 
 class TestOsFactory(TestCase):
-
-    def test_create_restart_command(self):
-        assert type(create_command_factory("restart", Mock())) is RestartCommand
-
-    def test_create_query_command(self):
-        assert type(create_command_factory("query", Mock())) is QueryCommand
 
     def test_create_fota_command(self):
         assert type(create_command_factory("fota", Mock())) is FotaCommand

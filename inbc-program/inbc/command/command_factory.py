@@ -6,12 +6,12 @@
 """
 from ..ibroker import IBroker
 from ..inbc_exception import InbcException
-from .command import Command, RestartCommand, QueryCommand
+from .command import Command
 from .ota_command import FotaCommand, SotaCommand, PotaCommand
 from .config_command import GetConfigCommand, SetConfigCommand, LoadConfigCommand, AppendConfigCommand, RemoveConfigCommand
 
 from inbm_common_lib.constants import CONFIG_LOAD, CONFIG_APPEND, CONFIG_REMOVE
-from inbm_lib.constants import FOTA, SOTA, POTA, RESTART, QUERY
+from inbm_lib.constants import FOTA, SOTA, POTA
 
 
 def create_command_factory(cmd: str, broker: IBroker) -> Command:
@@ -27,10 +27,6 @@ def create_command_factory(cmd: str, broker: IBroker) -> Command:
         return FotaCommand(broker)
     if cmd == SOTA:
         return SotaCommand(broker)
-    if cmd == RESTART:
-        return RestartCommand(broker)
-    if cmd == QUERY:
-        return QueryCommand(broker)
     if cmd == CONFIG_LOAD:
         return LoadConfigCommand(broker)
     if cmd == 'get':

@@ -13,7 +13,7 @@ from ..inbc_exception import InbcCode
 from ..utility import search_keyword
 from ..ibroker import IBroker
 
-from inbm_lib.constants import CACHE, INSTALL_CHANNEL, FOTA, SOTA, POTA
+from inbm_lib.constants import CACHE, FOTA, SOTA, POTA
 from inbm_common_lib.request_message_constants import FOTA_SOTA_SUCCESS_MESSAGE_LIST, SOTA_FAILURE, \
     FOTA_SOTA_FAILURE_MESSAGE_LIST, COMMAND_SUCCESSFUL, SOTA_COMMAND_STATUS_SUCCESSFUL, SOTA_COMMAND_FAILURE, \
     SOTA_OVERALL_FAILURE, FOTA_INPROGRESS_FAILURE
@@ -27,7 +27,7 @@ class PotaCommand(Command):
         """
         super().__init__(POTA_TIME_LIMIT, broker, POTA)
 
-    def trigger_manifest(self, args: Any, topic: str = INSTALL_CHANNEL):
+    def trigger_manifest(self, args: Any, topic: str = INBM_INSTALL_CHANNEL):
         """Trigger the command-line utility tool to invoke update.
 
         @param args: arguments passed to command-line tool.
@@ -64,7 +64,7 @@ class SotaCommand(Command):
         """
         super().__init__(SOTA_TIME_LIMIT, broker, SOTA)
 
-    def trigger_manifest(self, args: Any, topic: str = INSTALL_CHANNEL):
+    def trigger_manifest(self, args: Any, topic: str = INBM_INSTALL_CHANNEL):
         """Trigger the command-line utility tool to invoke update.
 
         @param args: arguments passed to command-line tool.
@@ -106,7 +106,7 @@ class FotaCommand(Command):
         """
         super().__init__(FOTA_TIME_LIMIT, broker, FOTA)
 
-    def trigger_manifest(self, args: Any, topic: str = INSTALL_CHANNEL):
+    def trigger_manifest(self, args: Any, topic: str = INBM_INSTALL_CHANNEL):
         """Trigger the command-line utility tool to invoke update.
 
         @param args: arguments passed to command-line tool.

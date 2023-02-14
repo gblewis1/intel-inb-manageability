@@ -5,11 +5,9 @@ from inbc.parser import ArgsParser, fota, sota, load, get, set, append, remove
 from inbc.constants import COMMAND_FAIL, COMMAND_SUCCESS
 from inbc.inbc_exception import InbcCode, InbcException
 from inbc.command.ota_command import FotaCommand
-from inbc.command.command import QueryCommand
 
 from inbm_common_lib.platform_info import PlatformInformation
 from inbm_lib.request_message_constants import *
-from inbm_common_lib.request_message_constants import QUERY_SUCCESS, QUERY_FAILURE, QUERY_HOST_SUCCESS
 from mock import patch, mock_open, Mock
 from io import StringIO
 

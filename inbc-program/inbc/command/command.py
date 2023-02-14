@@ -10,18 +10,15 @@ import time
 from typing import Any, Optional
 from abc import ABC, abstractmethod
 
-from ..constants import COMMAND_SUCCESS, COMMAND_FAIL, MAX_TIME_LIMIT
+from ..constants import COMMAND_SUCCESS, COMMAND_FAIL
 from ..ibroker import IBroker
 from ..inbc_exception import InbcCode
 from ..utility import search_keyword
 
 from inbm_lib.timer import Timer
-from inbm_lib.constants import RESTART, QUERY, RESTART_CHANNEL
-from inbm_common_lib.request_message_constants import COMMAND_SUCCESSFUL, DYNAMIC_TELEMETRY, \
-    RESTART_SUCCESS, RESTART_FAILURE, QUERY_SUCCESS, QUERY_FAILURE, OTA_IN_PROGRESS, ACTIVE_NODE_NOT_FOUND, \
-    ELIGIBLE_NODE_NOT_FOUND, QUERY_HOST_SUCCESS, QUERY_HOST_FAILURE, QUERY_HOST_KEYWORD
+from inbm_common_lib.request_message_constants import DYNAMIC_TELEMETRY, \
+    OTA_IN_PROGRESS    
 from inbm_common_lib.request_message_constants import DBS_LOG, DOCKER_NAME, DOCKER_MESSAGE
-from inbm_lib.constants import HOST_QUERY_CHANNEL
 
 logger = logging.getLogger(__name__)
 
@@ -103,95 +100,3 @@ class Command(ABC):
         shared.running = False
         self._update_timer.stop()
 
-
-class RestartCommand(Command):
-    def __init__(self, broker: IBroker) -> None:
-        """Restart command
-
-        @param broker: Broker object
-        """
-        super().__init__(MAX_TIME_LIMIT, broker, RESTART)
-
-    def trigger_manifest(self, args: Any, topic: str = RESTART_CHANNEL) -> None:
-        """Trigger the command-line utility tool to invoke restart.
-
-        @param args: arguments passed to command-line tool.
-        @param topic: MQTT topic to publish the manifest.
-        """
-        super().trigger_manifest(args, RESTART_CHANNEL)
-
-    def search_response(self, payload: str) -> None:
-        """Search for keywords in response message
-
-        @param payload: payload received in which to search
-        """
-        # Expected "Restart SUCCESSFUL" message, need to update if message changed
-        if search_keyword(payload, [RESTART_SUCCESS]):
-            print("\n Device will restart after one minute.")
-            self.terminate_operation(COMMAND_SUCCESS, InbcCode.SUCCESS.value)
-        elif search_keyword(payload, [RESTART_FAILURE]):
-            self.terminate_operation(COMMAND_FAIL, InbcCode.FAIL.value)
-        else:
-            super().search_response(payload)
-
-    def search_event(self, payload: str, topic: str) -> None:
-        """Search for keywords in event message
-
-        @param payload: payload received in which to search
-        @param topic: topic from which message was received
-        """
-        super().search_event(payload, topic)
-
-
-class QueryCommand(Command):
-    def __init__(self, broker: IBroker) -> None:
-        """Query command
-
-        @param broker: Broker object
-        """
-        super().__init__(MAX_TIME_LIMIT, broker, QUERY)
-        self._success_code: Optional[int] = None
-
-    def trigger_manifest(self, args: Any, topic: str = QUERY_CHANNEL) -> None:
-        """Trigger the command-line utility tool to invoke query request.
-
-        @param args: arguments passed to command-line tool.
-        @param topic: MQTT topic to publish the manifest.
-        """
-        super().trigger_manifest(args, HOST_QUERY_CHANNEL)
-
-    def search_response(self, payload: str) -> None:
-        """Search for keywords in response message
-
-        @param payload: payload received in which to search
-        """
-        self.search_host_response(payload)
-        if search_keyword(payload, [QUERY_SUCCESS]):
-            self.terminate_operation(COMMAND_SUCCESS, InbcCode.SUCCESS.value)
-        elif search_keyword(payload, [QUERY_FAILURE]):
-            self.terminate_operation(COMMAND_FAIL, InbcCode.FAIL.value)
-        else:
-            super().search_response(payload)
-
-    def search_host_response(self, payload: str) -> None:
-        """INBC will not exit immediately, it will wait for query result.
-
-        @param payload: payload received in which to search
-        """
-        print("\n" + payload)
-        if search_keyword(payload, [QUERY_HOST_SUCCESS]):
-            self._success_code = InbcCode.SUCCESS.value
-            print("\n Waiting for last query result...")
-        elif search_keyword(payload, [QUERY_HOST_FAILURE]):
-            self._success_code = InbcCode.FAIL.value
-            self.terminate_operation(COMMAND_FAIL, InbcCode.FAIL.value)
-
-    def search_event(self, payload: str, topic: str) -> None:
-        """Search for keywords in event message
-
-        @param payload: payload received in which to search
-        @param topic: topic from which message was received
-        """
-        print("\n" + payload)
-        if search_keyword(payload, [QUERY_HOST_KEYWORD]):
-            self.terminate_operation(COMMAND_SUCCESS, InbcCode.SUCCESS.value)
