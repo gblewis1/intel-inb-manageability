@@ -49,7 +49,7 @@ class MQTTConnection(Connection):
         self._subscriptions: Dict = {}
 
         self._connect_waiter = Waiter()
-        self._client = self._create_mqtt_client(username, password, hostname, port, client_id)
+        self._client = self._create_mqtt_client(client_id)
 
         if tls_config:
             self._client.tls_set_context(tls_config.context)
@@ -58,6 +58,11 @@ class MQTTConnection(Connection):
             logger.debug("MQTTConnection.__init__ with proxy: endpoint {} ".format(
                 str(proxy_config.endpoint)))
             self._set_proxy(proxy_config)
+
+        self._username = username
+        self._password = password
+        self._hostname = hostname
+        self._port = port
 
     def _set_proxy(self, config: ProxyConfig) -> None:
         """Set the proxy; this is needed to avoid a pylint recursion error
@@ -68,14 +73,17 @@ class MQTTConnection(Connection):
             socks.set_default_proxy(socks.PROXY_TYPE_HTTP, *config.endpoint)
             socket.socket = socks.socksocket  # type: ignore
 
-    def _create_mqtt_client(self, username: str, password: Optional[str], hostname: str, port: str, client_id: Optional[str] = "") -> Client:
-        """Create an MQTT client"""
-        client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv311)
-        client.username_pw_set(username, password)
-        client.connect = partial(client.connect, host=hostname, port=port)
-        client.on_connect = self._on_connect
-        client.on_disconnect = self._on_disconnect
-        return client
+    def _create_mqtt_client(self, client_id: Optional[str] = "") -> Client:
+        try:
+            """Create an MQTT client"""
+            client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv311)
+            client.username_pw_set(self._username, self._password)
+            client.connect = partial(client.connect, host=self._hostname, port=self._port)
+            client.on_connect = self._on_connect
+            client.on_disconnect = self._on_disconnect
+            return client
+        except ValueError as e:
+            raise ConnectError(f"Error connecting to MQTT client: {e}")
 
     def _subscribe_all(self) -> None:
         """Subscribe to all collected subscriptions"""
