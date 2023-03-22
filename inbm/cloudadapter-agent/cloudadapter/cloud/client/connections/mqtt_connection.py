@@ -48,6 +48,11 @@ class MQTTConnection(Connection):
         self._subscribe_lock = RLock()
         self._subscriptions: Dict = {}
 
+        self._username = username
+        self._password = password
+        self._hostname = hostname
+        self._port = port
+
         self._connect_waiter = Waiter()
         self._client = self._create_mqtt_client(client_id)
 
@@ -58,11 +63,6 @@ class MQTTConnection(Connection):
             logger.debug("MQTTConnection.__init__ with proxy: endpoint {} ".format(
                 str(proxy_config.endpoint)))
             self._set_proxy(proxy_config)
-
-        self._username = username
-        self._password = password
-        self._hostname = hostname
-        self._port = port
 
     def _set_proxy(self, config: ProxyConfig) -> None:
         """Set the proxy; this is needed to avoid a pylint recursion error
