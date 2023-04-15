@@ -31,9 +31,9 @@ jobs:
         echo "${{ github.event.inputs.version }}" >version.txt
         sed -i "s/NEXT - \?/${{ github.event.inputs.version }} - ($(date +%Y-%m-%d))/g" inbm/Changelog.md
 
-    - name: Run set-version.sh
+    - name: Run set-versions.sh
       run: |
-        chmod +x set-version.sh
+        chmod +x set-versions.sh
         ./set-version.sh 0.0.0 "${{ github.event.inputs.version }}"
 
     - name: Commit changes
