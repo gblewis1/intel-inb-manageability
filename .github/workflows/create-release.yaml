@@ -34,7 +34,7 @@ jobs:
     - name: Run set-versions.sh
       run: |
         chmod +x set-versions.sh
-        ./set-version.sh 0.0.0 "${{ github.event.inputs.version }}"
+        ./set-version.shs 0.0.0 "${{ github.event.inputs.version }}"
 
     - name: Commit changes
       run: |
